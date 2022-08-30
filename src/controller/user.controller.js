@@ -18,48 +18,26 @@ exports.generateImage = async (req, res) => {
     try {
         const token = res.locals.token;
         const user = jwt.decode(token);
+        let finalData = []
+
+        startCreating(user);
         const folderName = `${buildDir}/images/user_${user.id}`;
         const data = fs.readdirSync(folderName)
             .filter((file) => fs.lstatSync(path.join(folderName, file)).isFile())
             .map((file) => (file))
-        let finalData = []
-
-        buildSetup(user);
-        startCreating(user);
-
-        // async function downloadImage(imageSrc) {
-        //     const image = await fetch(imageSrc)
-        //     const imageBlog = await image.blob()
-        //     console.log("image", imageBlog);
-        //     const imageURL = global.URL.createObjectURL(imageBlog)
-        //     console.log(imageURL);
-        //     const link = document.createElement('a')
-        //     link.href = imageURL
-        //     link.download = 'image file name here'
-        //     document.body.appendChild(link)
-        //     link.click()
-        //     document.body.removeChild(link)
-        // }
-
-
+        console.log("data", data);
         data.forEach((e, i) => {
-            const data1 = `http://104.167.236.3:3005/build/images/user_${user.id}/` + e;
+            const data1 = `http://192.168.0.79:3005/build/images/user_${user.id}/` + e;
             finalData.push(data1)
         });
 
-
-        // try {
-        //     const savePath = `${basePath}/download`
-        //     console.log(savePath);
-        //     finalData.map(async (e) => {
-        //         downloadImage(e)
-        //     })
-        // } catch (e) {
-        //     console.log('e ', e)
-        // }
         return res
-            .status(200)
-            .send(CreateSuccessResponse(`Generate successfully`, finalData));
+            .status(201)
+            .send(
+                CreateSuccessResponse(
+                    `Generate successfully`, finalData
+                )
+            );
     } catch (error) {
         return res
             .status(500)
@@ -67,5 +45,6 @@ exports.generateImage = async (req, res) => {
                 CreateErrorResponse("generateImage", `${error}`, "Something Went Wrong!!")
             );
     }
+
 
 }

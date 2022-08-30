@@ -38,6 +38,7 @@ exports.Login = async (req, res) => {
       adminData["token"] = token;
       delete adminData["password"];
       if (validUser) {
+        buildSetup(adminData);
         return res
           .status(200)
           .send(CreateSuccessResponse(`Login successfully`, adminData));
