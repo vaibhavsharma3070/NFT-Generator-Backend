@@ -43,7 +43,7 @@ exports.generateImage = async (req, res) => {
 
 
         data.forEach((e, i) => {
-            const data1 = `http://192.168.0.79:3005/build/images/user_${user.id}/` + e;
+            const data1 = `http://104.167.236.3:3005/build/images/user_${user.id}/` + e;
             finalData.push(data1)
         });
 
@@ -62,10 +62,10 @@ exports.generateImage = async (req, res) => {
             .send(CreateSuccessResponse(`Generate successfully`, finalData));
     } catch (error) {
         return res
-        .status(500)
-        .send(
-          CreateErrorResponse("generateImage", `${error}`, "Something Went Wrong!!")
-        );
+            .status(500)
+            .send(
+                CreateErrorResponse("generateImage", `${error}`, "Something Went Wrong!!")
+            );
     }
 
 }
