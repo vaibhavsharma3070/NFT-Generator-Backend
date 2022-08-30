@@ -63,7 +63,7 @@ exports.generateImage = async (req, res) => {
     } catch (error) {
         return res
         .status(500)
-        .json(
+        .send(
           CreateErrorResponse("generateImage", `${error}`, "Something Went Wrong!!")
         );
     }
