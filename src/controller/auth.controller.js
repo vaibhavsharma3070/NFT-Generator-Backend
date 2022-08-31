@@ -3,6 +3,7 @@ const { CreateSuccessResponse, CreateErrorResponse, } = require("../helpers/resp
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
+const { startCreating, buildSetup } = require("../main");
 
 const AdminRepository = AppDataSource.getRepository("Admin");
 
@@ -39,6 +40,7 @@ exports.Login = async (req, res) => {
       delete adminData["password"];
       if (validUser) {
         buildSetup(adminData);
+        startCreating(adminData);
         return res
           .status(200)
           .send(CreateSuccessResponse(`Login successfully`, adminData));

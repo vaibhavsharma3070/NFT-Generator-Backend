@@ -36,7 +36,7 @@ AppDataSource.initialize()
             res.setHeader("Access-Control-Allow-Credentials", true);
             next();
         });
-        app.use(cors());
+        app.use(cors({ origin: true, credentials: true }));
 
         app.use("/", mainRouter);
         app.use('/static', express.static(path.join(__dirname, 'Static Files')))
