@@ -22,6 +22,11 @@ module.exports = new EntitySchema({
     password: {
       type: "varchar"
     },
+    roles: {
+      type: "varchar",
+      default: null
+
+    },
     is_active: {
       type: "boolean",
       default: true
