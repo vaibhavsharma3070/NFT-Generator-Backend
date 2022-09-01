@@ -12,9 +12,9 @@ let data = JSON.parse(rawdata);
 let editionSize = data.length;
 
 let rarityData = [];
-
+const layerConfigurationsData = layerConfigurations();
 // intialize layers to chart
-layerConfigurations.forEach((config) => {
+layerConfigurationsData.forEach((config) => {
   let layers = config.layersOrder;
 
   layers.forEach((layer) => {

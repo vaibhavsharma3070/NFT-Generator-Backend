@@ -1,9 +1,9 @@
 const basePath = process.cwd();
+const { AppDataSource } = require("../src/data-source")
 const { MODE } = require(`${basePath}/constants/blend_mode.js`);
 const { NETWORK } = require(`${basePath}/constants/network.js`);
-
+const ConfigRepository = AppDataSource.getRepository("Config");
 const network = NETWORK.eth;
-
 // General metadata for Ethereum
 const namePrefix = "Your Collection";
 const description = "Remember to replace this description";
@@ -22,20 +22,46 @@ const solanaMetadata = {
 };
 
 // If you have selected Solana then the collection starts from 0 automatically
-const layerConfigurations = [
-  {
-    growEditionSizeTo: 5,
-    layersOrder: [
-      { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
-    ],
-  },
-];
+// const layerConfigurations = [
+//   {
+//     growEditionSizeTo: 5,
+//     layersOrder: [
+//       { name: "Background" },
+//       { name: "Eyeball" },
+//       { name: "Eye color" },
+//       { name: "Iris" },
+//       { name: "Shine" },
+//       { name: "Bottom lid" },
+//       { name: "Top lid" },
+//     ],
+//   },
+// ];
+
+
+const layerConfigurations = async (user) => {
+  const configData = ConfigRepository.createQueryBuilder("config");
+  configData.where({
+    user_id: user.id,
+  })
+  configData.select(["config.growEditionSizeTo", "config.layersOrder"]);
+
+  return await configData.getMany();
+  //  data
+  // [
+  //   {
+  //     growEditionSizeTo: 5,
+  //     layersOrder: [
+  //       { name: "Background" },
+  //       { name: "Eyeball" },
+  //       { name: "Eye color" },
+  //       { name: "Iris" },
+  //       { name: "Shine" },
+  //       { name: "Bottom lid" },
+  //       { name: "Top lid" },
+  //     ],
+  //   },
+  // ];
+}
 
 const shuffleLayerConfigurations = false;
 

@@ -98,7 +98,8 @@ const getElements = (path) => {
 };
 
 const layersSetup = (layersOrder) => {
-  const layers = layersOrder.map((layerObj, index) => ({
+  const layersOrders = JSON.parse(layersOrder)
+  const layers = layersOrders.map((layerObj, index) => ({
     id: index,
     elements: getElements(`${layersDir}/${layerObj.name}/`),
     name:
@@ -345,13 +346,14 @@ function shuffle(array) {
 }
 
 const startCreating = async (user) => {
+  const layerConfigurationsData = await layerConfigurations(user);
   let layerConfigIndex = 0;
   let editionCount = 1;
   let failedCount = 0;
   let abstractedIndexes = [];
   for (
     let i = network == NETWORK.sol ? 0 : 1;
-    i <= layerConfigurations[layerConfigurations.length - 1].growEditionSizeTo;
+    i <= layerConfigurationsData[layerConfigurationsData.length - 1].growEditionSizeTo;
     i++
   ) {
     abstractedIndexes.push(i);
@@ -362,12 +364,12 @@ const startCreating = async (user) => {
   debugLogs
     ? console.log("Editions left to create: ", abstractedIndexes)
     : null;
-  while (layerConfigIndex < layerConfigurations.length) {
+  while (layerConfigIndex < layerConfigurationsData.length) {
     const layers = layersSetup(
-      layerConfigurations[layerConfigIndex].layersOrder
+      layerConfigurationsData[layerConfigIndex].layersOrder
     );
     while (
-      editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
+      editionCount <= layerConfigurationsData[layerConfigIndex].growEditionSizeTo
     ) {
       let newDna = createDna(layers);
       if (isDnaUnique(dnaList, newDna)) {
@@ -399,7 +401,7 @@ const startCreating = async (user) => {
             drawElement(
               renderObject,
               index,
-              layerConfigurations[layerConfigIndex].layersOrder.length
+              layerConfigurationsData[layerConfigIndex].layersOrder.length
             );
             if (gif.export) {
               hashlipsGiffer.add();
@@ -428,7 +430,7 @@ const startCreating = async (user) => {
         failedCount++;
         if (failedCount >= uniqueDnaTorrance) {
           console.log(
-            `You need more layers or elements to grow your edition to ${layerConfigurations[layerConfigIndex].growEditionSizeTo} artworks!`
+            `You need more layers or elements to grow your edition to ${layerConfigurationsData[layerConfigIndex].growEditionSizeTo} artworks!`
           );
           process.exit();
         }
