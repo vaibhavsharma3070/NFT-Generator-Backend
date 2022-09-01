@@ -40,6 +40,12 @@ const buildSetup = (user) => {
     fs.mkdirSync(`${buildDir}/images`);
   }
   const folderName = `${buildDir}/images/user_${user.id}`;
+  const jsonFolderName = `${buildDir}/json/user_${user.id}`;
+  if (!fs.existsSync(jsonFolderName)) {
+    fs.mkdirSync(jsonFolderName, {
+      recursive: true
+    });
+  }
   if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName, {
       recursive: true
@@ -307,11 +313,11 @@ const createDna = (_layers) => {
   return randNum.join(DNA_DELIMITER);
 };
 
-const writeMetaData = (_data) => {
-  fs.writeFileSync(`${buildDir}/json/_metadata.json`, _data);
+const writeMetaData = (_data, user) => {
+  fs.writeFileSync(`${buildDir}/json/user_${user.id}/_metadata.json`, _data);
 };
 
-const saveMetaDataSingleFile = (_editionCount) => {
+const saveMetaDataSingleFile = (_editionCount, user) => {
   let metadata = metadataList.find((meta) => meta.edition == _editionCount);
   debugLogs
     ? console.log(
@@ -319,7 +325,7 @@ const saveMetaDataSingleFile = (_editionCount) => {
     )
     : null;
   fs.writeFileSync(
-    `${buildDir}/json/${_editionCount}.json`,
+    `${buildDir}/json/user_${user.id}/${_editionCount}.json`,
     JSON.stringify(metadata, null, 2)
   );
 };
@@ -407,7 +413,7 @@ const startCreating = async (user) => {
             : null;
           saveImage(abstractedIndexes[0], user);
           addMetadata(newDna, abstractedIndexes[0]);
-          saveMetaDataSingleFile(abstractedIndexes[0]);
+          saveMetaDataSingleFile(abstractedIndexes[0], user);
           console.log(
             `Created edition: ${abstractedIndexes[0]}, with DNA: ${sha1(
               newDna
@@ -430,7 +436,7 @@ const startCreating = async (user) => {
     }
     layerConfigIndex++;
   }
-  writeMetaData(JSON.stringify(metadataList, null, 2));
+  writeMetaData(JSON.stringify(metadataList, null, 2), user);
 };
 
 module.exports = { startCreating, buildSetup, getElements };

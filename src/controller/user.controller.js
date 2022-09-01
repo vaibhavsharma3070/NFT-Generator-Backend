@@ -11,49 +11,49 @@ var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         fs.readdir('./build/images/', (err, files) => {
             if (err)
-              console.log(err);
+                console.log(err);
             else {
-              if(files.length === 0){
-                cb({msg:"No user images found"});
-              }
-              else{
-                files.forEach(file => {
-                    // if (!fs.existsSync("./build/images/")) {
-                    //     fs.mkdirSync("./build/images/")
-                    // }
-                    cb(null, "./build/images/"+file);
-                })
-              }
+                if (files.length === 0) {
+                    cb({ msg: "No user images found" });
+                }
+                else {
+                    files.forEach(file => {
+                        // if (!fs.existsSync("./build/images/")) {
+                        //     fs.mkdirSync("./build/images/")
+                        // }
+                        cb(null, "./build/images/" + file);
+                    })
+                }
             }
-          })
-       
+        })
+
     },
     filename: function (req, file, cb) {
-      cb(null, file.fieldname + "-" + Date.now()+".jpg")
+        cb(null, file.fieldname + "-" + Date.now() + ".jpg")
     }
-  });
+});
 //   const maxSize = 1 * 1000 * 1000;
-var upload = multer({ 
+var upload = multer({
     storage: storage,
     // limits: { fileSize: maxSize },
-    fileFilter: function (req, file, cb){
-    
+    fileFilter: function (req, file, cb) {
+
         // Set the filetypes, it is optional
         var filetypes = /jpeg|jpg|png/;
         var mimetype = filetypes.test(file.mimetype);
-  
+
         var extname = filetypes.test(path.extname(
-                    file.originalname).toLowerCase());
-        
+            file.originalname).toLowerCase());
+
         if (mimetype && extname) {
             return cb(null, true);
         }
-      
+
         cb("Error: File upload only supports the "
-                + "following filetypes - " + filetypes);
-      } 
-  
-}).array("uploaded_file");  
+            + "following filetypes - " + filetypes);
+    }
+
+}).array("uploaded_file");
 
 exports.generateImage = async (req, res) => {
 
@@ -63,10 +63,18 @@ exports.generateImage = async (req, res) => {
         let finalData = []
 
         const folderName = `${buildDir}/images/user_${user.id}`;
+        const jsonFolderName = `${buildDir}/json/user_${user.id}`;
         const data = fs.readdirSync(folderName)
             .filter((file) => fs.lstatSync(path.join(folderName, file)).isFile())
             .map((file) => (file))
-        console.log("data", data);
+
+        const jsonData = fs.readdirSync(jsonFolderName)
+            .filter((file) => fs.lstatSync(path.join(jsonFolderName, file)).isFile())
+            .map((file) => (file))
+        jsonData.forEach((e, i) => {
+            const data2 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/json/user_${user.id}/` + e;
+            finalData.push(data2)
+        });
         data.forEach((e, i) => {
             const data1 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/images/user_${user.id}/` + e;
             finalData.push(data1)
@@ -90,10 +98,10 @@ exports.generateImage = async (req, res) => {
 exports.storeImage = async (req, res) => {
 
     try {
-          upload(req,res,function(err) {
-           
-            if(err) {
-      
+        upload(req, res, function (err) {
+
+            if (err) {
+
                 // ERROR occurred (here it can be occurred due
                 // to uploading image of size greater than
                 // 1MB or uploading different file type)
@@ -102,12 +110,12 @@ exports.storeImage = async (req, res) => {
 
             }
             else {
-      
+
                 // SUCCESS, image successfully uploaded
-                res.send({res:'1',msg:"Success, Image uploaded!"})
+                res.send({ res: '1', msg: "Success, Image uploaded!" })
             }
         })
-         
+
     } catch (error) {
         return res
             .status(500)

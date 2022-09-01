@@ -25,7 +25,6 @@ module.exports = new EntitySchema({
     roles: {
       type: "varchar",
       default: null
-
     },
     is_active: {
       type: "boolean",
