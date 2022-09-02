@@ -4,8 +4,8 @@ const authMiddleware = require('../helpers/jwt');
 
 const layerTypeRouter = express.Router();
 
-layerTypeRouter.post("/savelayer", authMiddleware, saveLayer);
-layerTypeRouter.get("/layertypelist", authMiddleware, getLayerTypes);
-layerTypeRouter.put("/updatelayer", authMiddleware, updateLayer);
+layerTypeRouter.post("/savelayer", saveLayer);
+layerTypeRouter.get("/layertypelist", getLayerTypes);
+layerTypeRouter.put("/updatelayer", updateLayer);
 
 module.exports = layerTypeRouter;

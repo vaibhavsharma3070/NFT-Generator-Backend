@@ -4,8 +4,8 @@ const authMiddleware = require('../helpers/jwt');
 
 const ConfigRouter = express.Router();
 
-ConfigRouter.get("/getconfig", authMiddleware, getConfig);
+ConfigRouter.get("/getconfig", getConfig);
 
-ConfigRouter.put("/updateconfig", authMiddleware, updateConfig);
+ConfigRouter.put("/updateconfig", updateConfig);
 
 module.exports = ConfigRouter;

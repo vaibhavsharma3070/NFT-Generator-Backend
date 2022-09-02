@@ -4,7 +4,7 @@ const authMiddleware = require("../helpers/jwt")
 
 const UserRouter = express.Router();
 
-UserRouter.get("/generate", authMiddleware, generateImage);
-UserRouter.post("/storeImage",authMiddleware, storeImage);
+UserRouter.get("/generate", generateImage);
+UserRouter.post("/storeImage", storeImage);
 
 module.exports = UserRouter;
