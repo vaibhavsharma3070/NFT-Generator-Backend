@@ -10,10 +10,7 @@ module.exports = new EntitySchema({
       generated: true,
     },
     growEditionSizeTo: {
-      type: "varchar",
-    },
-    layersOrder: {
-      type: "varchar",
+      type: "int",
     },
     user_id:{
       type:"int"
@@ -22,12 +19,4 @@ module.exports = new EntitySchema({
       type: "varchar",
     }
   },
-  relations: {
-    categories: {
-        target: "admins",
-        type: "one-to-one",
-        joinTable: true,
-        cascade: true,
-    },
-},
 })

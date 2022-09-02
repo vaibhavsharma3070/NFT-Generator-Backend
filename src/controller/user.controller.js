@@ -7,9 +7,13 @@ const fs = require("fs");
 const buildDir = `${basePath}/build`;
 const path = require('path')
 const multer = require('multer')
+const { AppDataSource } = require("../data-source")
+const LayerTypeRepository = AppDataSource.getRepository("layertype");
+
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        fs.readdir('./build/images/', (err, files) => {
+    destination: async function (req, file, cb) {
+        fs.readdir('./layers', async (err, files) => {
+            let data = []
             if (err)
                 console.log(err);
             else {
@@ -17,11 +21,21 @@ var storage = multer.diskStorage({
                     cb({ msg: "No user images found" });
                 }
                 else {
-                    files.forEach(file => {
+                    const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
+                        .where("selected = :s", { s: true })
+                        .execute();
+
+                    ListOfLayers.map((e) => {
+                        if (e.layertype_selected == true) {
+                            data.push(e.layertype_name)
+                        }
+                    })
+
+                    data.forEach(file => {
                         // if (!fs.existsSync("./build/images/")) {
                         //     fs.mkdirSync("./build/images/")
                         // }
-                        cb(null, "./build/images/" + file);
+                        cb(null, "./layers/" + file);
                     })
                 }
             }
@@ -29,7 +43,7 @@ var storage = multer.diskStorage({
 
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + "-" + Date.now() + ".jpg")
+        cb(null, Date.now() + ".jpg")
     }
 });
 //   const maxSize = 1 * 1000 * 1000;

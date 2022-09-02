@@ -98,8 +98,7 @@ const getElements = (path) => {
 };
 
 const layersSetup = (layersOrder) => {
-  const layersOrders = JSON.parse(layersOrder)
-  const layers = layersOrders.map((layerObj, index) => ({
+  const layers = layersOrder.map((layerObj, index) => ({
     id: index,
     elements: getElements(`${layersDir}/${layerObj.name}/`),
     name:

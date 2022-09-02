@@ -1,9 +1,11 @@
 const express = require('express');
-const { StoreConfig } = require("../controller/config.controller");
+const { getConfig,updateConfig } = require("../controller/config.controller");
 const authMiddleware = require('../helpers/jwt');
 
 const ConfigRouter = express.Router();
 
-ConfigRouter.post("/configsave", authMiddleware, StoreConfig);
+ConfigRouter.get("/getconfig", authMiddleware, getConfig);
+
+ConfigRouter.put("/updateconfig", authMiddleware, updateConfig);
 
 module.exports = ConfigRouter;

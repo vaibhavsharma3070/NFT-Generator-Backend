@@ -39,28 +39,29 @@ const solanaMetadata = {
 
 
 const layerConfigurations = async (user) => {
+  const LayerTypeRepository = AppDataSource.getRepository("layertype");
   const configData = ConfigRepository.createQueryBuilder("config");
   configData.where({
     user_id: user.id,
   })
-  configData.select(["config.growEditionSizeTo", "config.layersOrder"]);
+  configData.select(["config.growEditionSizeTo"]);
+  const data = await configData.getOne();
 
-  return await configData.getMany();
-  //  data
-  // [
-  //   {
-  //     growEditionSizeTo: 5,
-  //     layersOrder: [
-  //       { name: "Background" },
-  //       { name: "Eyeball" },
-  //       { name: "Eye color" },
-  //       { name: "Iris" },
-  //       { name: "Shine" },
-  //       { name: "Bottom lid" },
-  //       { name: "Top lid" },
-  //     ],
-  //   },
-  // ];
+  const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
+    .where("selected = :s", { s: true })
+    .execute();
+
+  let arrayOfLayers = []
+  ListOfLayers.map((e) => {
+    arrayOfLayers.push({ name: e.layertype_name })
+  });
+
+  return [
+    {
+      growEditionSizeTo: data.growEditionSizeTo,
+      layersOrder: arrayOfLayers,
+    },
+  ];
 }
 
 const shuffleLayerConfigurations = false;
