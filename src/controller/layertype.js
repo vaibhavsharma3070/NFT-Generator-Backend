@@ -58,6 +58,7 @@ exports.getLayerTypes = async (req, res) => {
 }
 
 exports.updateLayer = async (req, res) => {
+    console.log(updateLayer);
     try {
         const status = req.body.status;
         const id = JSON.parse(req.body.id);
