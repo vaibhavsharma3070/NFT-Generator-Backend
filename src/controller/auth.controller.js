@@ -7,7 +7,7 @@ const { startCreating, buildSetup } = require("../main");
 
 const AdminRepository = AppDataSource.getRepository("Admin");
 
-exports.Login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const userData = AdminRepository.createQueryBuilder("admin");
 
@@ -18,12 +18,12 @@ exports.Login = async (req, res) => {
 
     if (adminData == null) {
       return res
-        .status(500)
+        .status(401)
         .send(
           CreateErrorResponse(
             "Login",
-            `Login failed!! Please enter correct email`,
-            "Invalid Email!"
+            "Invalid email id or password! Please try again.",
+            "User not found"
           )
         );
     }
@@ -47,11 +47,11 @@ exports.Login = async (req, res) => {
       }
       if (!validUser) {
         return res
-          .status(500)
+          .status(401)
           .send(
             CreateErrorResponse(
               "Login",
-              `Login failed!! Please enter correct password and email`,
+              "Invalid email id or password! Please try again.",
               "Invalid Credentials"
             )
           );
@@ -64,7 +64,7 @@ exports.Login = async (req, res) => {
   }
 };
 
-exports.SignUp = async (req, res) => {
+exports.signUp = async (req, res) => {
   try {
     const newAdminUser = req.body;
     const salt = bcrypt.genSaltSync(10);

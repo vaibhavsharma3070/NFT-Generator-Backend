@@ -21,29 +21,31 @@ var storage = multer.diskStorage({
                     cb({ msg: "No user images found" });
                 }
                 else {
-                    const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
-                        .where("selected = :s", { s: true })
+                    const ListOfLayers = await LayerTypeRepository.createQueryBuilder("layer")
+                        .orderBy('layer.id', 'DESC')
+                        .limit(1)
                         .execute();
+                    const file = ListOfLayers[0].layer_name
+                    console.log(file);
+                    // ListOfLayers.map((e) => {
+                    //     if (e.layertype_selected == true) {
+                    //         data.push(e.layertype_name)
+                    //     }
+                    // })
 
-                    ListOfLayers.map((e) => {
-                        if (e.layertype_selected == true) {
-                            data.push(e.layertype_name)
-                        }
-                    })
-
-                    data.forEach(file => {
-                        // if (!fs.existsSync("./build/images/")) {
-                        //     fs.mkdirSync("./build/images/")
-                        // }
-                        cb(null, "./layers/" + file);
-                    })
+                    // data.forEach(file => {
+                    //     // if (!fs.existsSync("./build/images/")) {
+                    //     //     fs.mkdirSync("./build/images/")
+                    //     // }
+                    cb(null, "./layers/" + file);
+                    // })
                 }
             }
         })
 
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + ".jpg")
+        cb(null, file.originalname)
     }
 });
 //   const maxSize = 1 * 1000 * 1000;
@@ -119,14 +121,24 @@ exports.storeImage = async (req, res) => {
                 // ERROR occurred (here it can be occurred due
                 // to uploading image of size greater than
                 // 1MB or uploading different file type)
-                res.send(err)
+                return res
+                    .status(500)
+                    .send(
+                        CreateErrorResponse("storeImage", `${err}`, "Something Went Wrong!!")
+                    );
                 // res.send({res:'0',msg:err.msg})
 
             }
             else {
 
                 // SUCCESS, image successfully uploaded
-                res.send({ res: '1', msg: "Success, Image uploaded!" })
+                return res
+                    .status(201)
+                    .send(
+                        CreateSuccessResponse(
+                            `Image store successfully`
+                        )
+                    );
             }
         })
 

@@ -3,7 +3,6 @@ const { CreateSuccessResponse, CreateErrorResponse } = require("../helpers/respo
 const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
-    console.log(authHeader);
     const token = authHeader && authHeader?.split(" ")[1];
     if (!token) res.status(401).send("Unauthorized Access");
     const tokenSecret = process.env.SECRET_KEY;
