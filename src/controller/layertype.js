@@ -40,7 +40,6 @@ exports.saveLayer = async (req, res) => {
 exports.getLayerTypes = async (req, res) => {
     try {
         const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
-            .where("selected = :s", { s: true })
             .execute();
         return res
             .status(201)
