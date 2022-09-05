@@ -42,7 +42,7 @@ const layerConfigurations = async (user) => {
   const LayerTypeRepository = AppDataSource.getRepository("layertype");
   const configData = ConfigRepository.createQueryBuilder("config");
   configData.where({
-    user_id: user.id,
+    id: 1,
   })
   configData.select(["config.growEditionSizeTo"]);
   const data = await configData.getOne();
