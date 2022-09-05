@@ -59,11 +59,27 @@ exports.getLayerTypes = async (req, res) => {
 exports.updateLayer = async (req, res) => {
     try {
         const data = req.body;
-        const id = data.id;
-        const layerTypeData = await LayerTypeRepository.createQueryBuilder()
+        let trueData = []
+        let falseData = []
+        data.map((e) => {
+            if (e.layertype_selected == true) {
+                trueData.push(e.layertype_id)
+            }
+            if (e.layertype_selected == false) {
+                falseData.push(e.layertype_id)
+            }
+        })
+
+        const trueDatas = await LayerTypeRepository.createQueryBuilder()
             .update()
-            .set({ selected: data.status })
-            .where({ id: In(id) })
+            .set({ selected: true })
+            .where({ id: In(trueData) })
+            .execute();
+
+        const falseDatas = await LayerTypeRepository.createQueryBuilder()
+            .update()
+            .set({ selected: false })
+            .where({ id: In(falseData) })
             .execute();
 
         return res
@@ -71,7 +87,6 @@ exports.updateLayer = async (req, res) => {
             .send(
                 CreateSuccessResponse(
                     `Layer type updated successfully`,
-                    layerTypeData
                 )
             );
 
