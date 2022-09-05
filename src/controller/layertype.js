@@ -58,12 +58,11 @@ exports.getLayerTypes = async (req, res) => {
 
 exports.updateLayer = async (req, res) => {
     try {
-        const status = req.body.status;
-        const id = JSON.parse(req.body.id);
-
+        const data = req.body;
+        const id = data.id;
         const layerTypeData = await LayerTypeRepository.createQueryBuilder()
             .update()
-            .set({ selected: status })
+            .set({ selected: data.status })
             .where({ id: In(id) })
             .execute();
 
@@ -77,7 +76,6 @@ exports.updateLayer = async (req, res) => {
             );
 
     } catch (error) {
-        console.log("error", error);
         return res
             .status(500)
             .json(CreateErrorResponse("updateConfig", `${error}`, "Something Went Wrong!!"));
