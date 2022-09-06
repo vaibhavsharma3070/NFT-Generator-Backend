@@ -45,7 +45,7 @@ var storage = multer.diskStorage({
 
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname)
+        cb(null, Date.now() + ".jpg")
     }
 });
 //   const maxSize = 1 * 1000 * 1000;
