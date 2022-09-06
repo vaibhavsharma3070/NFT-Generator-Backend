@@ -78,6 +78,9 @@ exports.generateImage = async (req, res) => {
         const user = jwt.decode(token);
         let finalData = []
 
+        buildSetup(user);
+        startCreating(user);
+
         const folderName = `${buildDir}/images/user_${user.id}`;
         const jsonFolderName = `${buildDir}/json/user_${user.id}`;
         const data = fs.readdirSync(folderName)
@@ -112,35 +115,44 @@ exports.generateImage = async (req, res) => {
     }
 }
 exports.storeImage = async (req, res) => {
-
+    const token = res.locals.token;
+    const user = jwt.decode(token);
     try {
-        upload(req, res, function (err) {
+        if (user.roles == "Admin") {
+            upload(req, res, function (err) {
 
-            if (err) {
+                if (err) {
 
-                // ERROR occurred (here it can be occurred due
-                // to uploading image of size greater than
-                // 1MB or uploading different file type)
-                return res
-                    .status(500)
-                    .send(
-                        CreateErrorResponse("storeImage", `${err}`, "Something Went Wrong!!")
-                    );
-                // res.send({res:'0',msg:err.msg})
+                    // ERROR occurred (here it can be occurred due
+                    // to uploading image of size greater than
+                    // 1MB or uploading different file type)
+                    return res
+                        .status(500)
+                        .send(
+                            CreateErrorResponse("storeImage", `${err}`, "Something Went Wrong!!")
+                        );
+                    // res.send({res:'0',msg:err.msg})
 
-            }
-            else {
+                }
+                else {
 
-                // SUCCESS, image successfully uploaded
-                return res
-                    .status(201)
-                    .send(
-                        CreateSuccessResponse(
-                            `Image store successfully`
-                        )
-                    );
-            }
-        })
+                    // SUCCESS, image successfully uploaded
+                    return res
+                        .status(201)
+                        .send(
+                            CreateSuccessResponse(
+                                `Image store successfully`
+                            )
+                        );
+                }
+            })
+        } else {
+            return res
+                .status(401)
+                .send(
+                    "Unauthorized Access"
+                );
+        }
 
     } catch (error) {
         return res

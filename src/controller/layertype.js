@@ -11,25 +11,38 @@ const { getConnection, In } = require("typeorm");
 
 exports.saveLayer = async (req, res) => {
     try {
-        const name = req.body.name
-        const data = await LayerTypeRepository.save({ name });
+        const token = res.locals.token;
+        const user = jwt.decode(token);
 
-        const jsonFolderName = `${buildDir}/${name}`;
+        if (user.roles == "Admin") {
+            const name = req.body.name
+            const data = await LayerTypeRepository.save({ name });
 
-        if (!fs.existsSync(jsonFolderName)) {
-            fs.mkdirSync(jsonFolderName, {
-                recursive: true
-            });
+            const jsonFolderName = `${buildDir}/${name}`;
+
+            if (!fs.existsSync(jsonFolderName)) {
+                fs.mkdirSync(jsonFolderName, {
+                    recursive: true
+                });
+            }
+
+            return res
+                .status(201)
+                .send(
+                    CreateSuccessResponse(
+                        `Layer Insert successfully`,
+                        data
+                    )
+                );
+        } else {
+            return res
+                .status(401)
+                .send(
+                    "Unauthorized Access"
+                );
         }
 
-        return res
-            .status(201)
-            .send(
-                CreateSuccessResponse(
-                    `Layer Insert successfully`,
-                    data
-                )
-            );
+
     } catch (error) {
         return res
             .status(500)
@@ -39,16 +52,28 @@ exports.saveLayer = async (req, res) => {
 
 exports.getLayerTypes = async (req, res) => {
     try {
-        const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
-            .execute();
-        return res
-            .status(201)
-            .send(
-                CreateSuccessResponse(
-                    `List of layertypes`,
-                    ListOfLayers
-                )
-            );
+        const token = res.locals.token;
+        const user = jwt.decode(token);
+
+        if (user.roles == "Admin") {
+
+            const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
+                .execute();
+            return res
+                .status(201)
+                .send(
+                    CreateSuccessResponse(
+                        `List of layertypes`,
+                        ListOfLayers
+                    )
+                );
+        } else {
+            return res
+                .status(401)
+                .send(
+                    "Unauthorized Access"
+                );
+        }
     } catch (error) {
         return res
             .status(500)
@@ -94,5 +119,47 @@ exports.updateLayer = async (req, res) => {
         return res
             .status(500)
             .json(CreateErrorResponse("updateConfig", `${error}`, "Something Went Wrong!!"));
+    }
+}
+
+exports.deleteLayer = async (req, res) => {
+    try {
+        const token = res.locals.token;
+        const user = jwt.decode(token);
+        let data = req.body;
+
+        if (user.roles == "Admin") {
+
+            const DeleteData = await LayerTypeRepository.createQueryBuilder()
+                .delete()
+                .where("id = :id", { id: data.layertype_id })
+                .execute();
+
+            const folderName = `${buildDir}/${data.layertype_name}`;
+            if (fs.existsSync(folderName)) {
+                fs.rmdirSync(folderName, {
+                    recursive: true
+                });
+            }
+
+            return res
+                .status(201)
+                .send(
+                    CreateSuccessResponse(
+                        `Delete Successfully`,
+                        DeleteData
+                    )
+                );
+        } else {
+            return res
+                .status(401)
+                .send(
+                    "Unauthorized Access"
+                );
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .json(CreateErrorResponse("deleteLayer", `${error}`, "Something Went Wrong!!"));
     }
 }

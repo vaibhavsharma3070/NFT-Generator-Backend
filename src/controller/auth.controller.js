@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const { startCreating, buildSetup } = require("../main");
+const basePath = process.cwd();
+const buildDir = `${basePath}/build`;
+var fs = require('fs');
 
 const AdminRepository = AppDataSource.getRepository("Admin");
 
@@ -30,7 +33,7 @@ exports.login = async (req, res) => {
     if (adminData) {
       let validUser = bcrypt.compareSync(req.body.password, adminData.password);
       const token = jwt.sign(
-        { id: adminData.id?.toString(), email: adminData.email },
+        { id: adminData.id?.toString(), email: adminData.email, roles: adminData.roles },
         process.env.SECRET_KEY,
         {
           expiresIn: "1d",
@@ -39,8 +42,24 @@ exports.login = async (req, res) => {
       adminData["token"] = token;
       delete adminData["password"];
       if (validUser) {
-        buildSetup(adminData);
-        startCreating(adminData);
+
+        const deleteExists = (adminData) => {
+          const folderName = `${buildDir}/images/user_${adminData.id}`;
+          const jsonFolderName = `${buildDir}/json/user_${adminData.id}`;
+          if (fs.existsSync(jsonFolderName)) {
+            fs.rmdirSync(jsonFolderName, {
+              recursive: true
+            });
+          }
+          if (fs.existsSync(folderName)) {
+            fs.rmdirSync(folderName, {
+              recursive: true
+            });
+          }
+        };
+
+        deleteExists(adminData)
+
         return res
           .status(200)
           .send(CreateSuccessResponse(`Login successfully`, adminData));
@@ -91,3 +110,37 @@ exports.signUp = async (req, res) => {
       );
   }
 };
+
+exports.listOfUser = async (req, res) => {
+  try {
+    const token = res.locals.token;
+    const user = jwt.decode(token);
+
+    if (user.roles == "Admin") {
+
+      const listOfUser = await AdminRepository.createQueryBuilder("user")
+        .select(["user.id", "user.firstname", "user.lastname", "user.email", "user.roles", "user.is_active", "user.created_at"])
+        .execute();
+
+
+      return res
+        .status(201)
+        .send(
+          CreateSuccessResponse(
+            `List of Users`,
+            listOfUser
+          )
+        );
+    } else {
+      return res
+        .status(401)
+        .send(
+          "Unauthorized Access"
+        );
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json(CreateErrorResponse("listOfUser", `${error}`, "Something Went Wrong!!"));
+  }
+}

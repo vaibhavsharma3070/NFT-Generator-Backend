@@ -15,7 +15,7 @@ exports.getConfig = async (req, res) => {
             .status(201)
             .send(
                 CreateSuccessResponse(
-                    `Data Insert successfully`,
+                    `Data fetched successfully`,
                     config
                 )
             );
@@ -42,7 +42,7 @@ exports.updateConfig = async (req, res) => {
             .status(201)
             .send(
                 CreateSuccessResponse(
-                    `growEditionSizeTo updated ${numOfEdition} successfully`,
+                    ` Image length updated to ${numOfEdition} successfully`,
                     configData
                 )
             );
