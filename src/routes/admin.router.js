@@ -10,7 +10,7 @@ adminRouter.post("/storeImage", authMiddleware, storeImage);
 adminRouter.post("/savelayer", authMiddleware, saveLayer);
 adminRouter.get("/layertypelist", authMiddleware, getLayerTypes);
 adminRouter.put("/updatelayer", authMiddleware, updateLayer);
-adminRouter.delete("/deletelayer", authMiddleware, deleteLayer);
+adminRouter.delete("/deletelayer/:layertype_id", authMiddleware, deleteLayer);
 adminRouter.get("/userlist", authMiddleware, listOfUser);
 
 module.exports = adminRouter;

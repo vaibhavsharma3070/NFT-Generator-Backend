@@ -126,16 +126,20 @@ exports.deleteLayer = async (req, res) => {
     try {
         const token = res.locals.token;
         const user = jwt.decode(token);
-        let data = req.body;
+        const layertype_id = req.params.layertype_id;
 
         if (user.roles == "Admin") {
 
+            const getLayerName = await LayerTypeRepository.findOne({
+                where: { id: layertype_id }
+            })
+
             const DeleteData = await LayerTypeRepository.createQueryBuilder()
                 .delete()
-                .where("id = :id", { id: data.layertype_id })
+                .where("id = :id", { id: layertype_id })
                 .execute();
 
-            const folderName = `${buildDir}/${data.layertype_name}`;
+            const folderName = `${buildDir}/${getLayerName.name}`;
             if (fs.existsSync(folderName)) {
                 fs.rmdirSync(folderName, {
                     recursive: true
