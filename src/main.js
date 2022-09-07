@@ -210,6 +210,7 @@ const addText = (_sig, x, y, size) => {
 };
 
 const drawElement = (_renderObject, _index, _layersLen) => {
+  console.log("_layersLen=======>", _layersLen);
   ctx.globalAlpha = _renderObject.layer.opacity;
   ctx.globalCompositeOperation = _renderObject.layer.blend;
   text.only
@@ -319,6 +320,7 @@ const writeMetaData = (_data, user) => {
 
 const saveMetaDataSingleFile = (_editionCount, user) => {
   let metadata = metadataList.find((meta) => meta.edition == _editionCount);
+  console.log("metadata----------->", metadata.attributes);
   debugLogs
     ? console.log(
       `Writing metadata for ${_editionCount}: ${JSON.stringify(metadata)}`
@@ -396,6 +398,7 @@ const startCreating = async (user) => {
           if (background.generate) {
             drawBackground();
           }
+          console.log("renderObjectArray====>>", renderObjectArray);
           renderObjectArray.forEach((renderObject, index) => {
             drawElement(
               renderObject,
