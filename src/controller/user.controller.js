@@ -78,34 +78,65 @@ exports.generateImage = async (req, res) => {
         const user = jwt.decode(token);
         let finalData = []
 
-        buildSetup(user);
-        startCreating(user);
+        Promise.resolve()
+            .then(() => {
 
-        const folderName = `${buildDir}/images/user_${user.id}`;
-        const jsonFolderName = `${buildDir}/json/user_${user.id}`;
-        const data = fs.readdirSync(folderName)
-            .filter((file) => fs.lstatSync(path.join(folderName, file)).isFile())
-            .map((file) => (file))
+                buildSetup(user);
+                startCreating(user);
 
-        const jsonData = fs.readdirSync(jsonFolderName)
-            .filter((file) => fs.lstatSync(path.join(jsonFolderName, file)).isFile())
-            .map((file) => (file))
-        jsonData.forEach((e, i) => {
-            const data2 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/json/user_${user.id}/` + e;
-            finalData.push(data2)
-        });
-        data.forEach((e, i) => {
-            const data1 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/images/user_${user.id}/` + e;
-            finalData.push(data1)
-        });
+            }).then(() => {
+                setTimeout(() => {
+                    const folderName = `${buildDir}/images/user_${user.id}`;
+                    const jsonFolderName = `${buildDir}/json/user_${user.id}`;
+                    const data = fs.readdirSync(folderName)
+                        .filter((file) => fs.lstatSync(path.join(folderName, file)).isFile())
+                        .map((file) => (file))
 
-        return res
-            .status(201)
-            .send(
-                CreateSuccessResponse(
-                    `Generate successfully`, finalData
-                )
-            );
+                    const jsonData = fs.readdirSync(jsonFolderName)
+                        .filter((file) => fs.lstatSync(path.join(jsonFolderName, file)).isFile())
+                        .map((file) => (file))
+                    jsonData.forEach((e, i) => {
+                        const data2 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/json/user_${user.id}/` + e;
+                        finalData.push(data2)
+                    });
+                    data.forEach((e, i) => {
+                        const data1 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/images/user_${user.id}/` + e;
+                        finalData.push(data1)
+                    })
+                }, "1000")
+
+            }).then(() => {
+                setTimeout(() => {
+                    return res
+                        .status(201)
+                        .send(
+                            CreateSuccessResponse(
+                                `Generate successfully`, finalData
+                            )
+                        );
+                }, "1000")
+
+            }).then(() => {
+                setTimeout(() => {
+                    const deleteExists = (user) => {
+                        const folderName = `${buildDir}/images/user_${user.id}`;
+                        const jsonFolderName = `${buildDir}/json/user_${user.id}`;
+                        if (fs.existsSync(jsonFolderName)) {
+                          fs.rmdirSync(jsonFolderName, {
+                            recursive: true
+                          });
+                        }
+                        if (fs.existsSync(folderName)) {
+                          fs.rmdirSync(folderName, {
+                            recursive: true
+                          });
+                        }
+                      };
+              
+                      deleteExists(user)
+                }, "5000")
+
+            });
     } catch (error) {
         return res
             .status(500)

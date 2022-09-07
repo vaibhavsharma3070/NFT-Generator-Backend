@@ -42,24 +42,6 @@ exports.login = async (req, res) => {
       adminData["token"] = token;
       delete adminData["password"];
       if (validUser) {
-
-        const deleteExists = (adminData) => {
-          const folderName = `${buildDir}/images/user_${adminData.id}`;
-          const jsonFolderName = `${buildDir}/json/user_${adminData.id}`;
-          if (fs.existsSync(jsonFolderName)) {
-            fs.rmdirSync(jsonFolderName, {
-              recursive: true
-            });
-          }
-          if (fs.existsSync(folderName)) {
-            fs.rmdirSync(folderName, {
-              recursive: true
-            });
-          }
-        };
-
-        deleteExists(adminData)
-
         return res
           .status(200)
           .send(CreateSuccessResponse(`Login successfully`, adminData));
