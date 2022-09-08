@@ -19,6 +19,18 @@ exports.login = async (req, res) => {
     });
     const adminData = await userData.getOne();
 
+    if (adminData.is_active == false) {
+      return res
+        .status(401)
+        .send(
+          CreateErrorResponse(
+            "Login",
+            "You account is deactive by admin",
+            "Blocked User"
+          )
+        );
+    }
+
     if (adminData == null) {
       return res
         .status(401)
@@ -124,5 +136,26 @@ exports.listOfUser = async (req, res) => {
     return res
       .status(500)
       .json(CreateErrorResponse("listOfUser", `${error}`, "Something Went Wrong!!"));
+  }
+}
+
+exports.deleteUser = async (req, res) => {
+  let { id } = req.params;
+  try {
+    const DeleteAdmin = await AdminRepository.createQueryBuilder()
+      .update({ is_active: false })
+      .where("id = :id", { id: id })
+      .execute();
+
+    return res.status(200).send(
+      CreateSuccessResponse(`User deactive successfully`)
+    );
+  } catch (error) {
+    // return an error
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse("deleteUser", `${error}`, "Something Went Wrong!!")
+      );
   }
 }
