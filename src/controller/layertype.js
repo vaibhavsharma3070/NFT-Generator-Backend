@@ -57,8 +57,13 @@ exports.getLayerTypes = async (req, res) => {
 
         if (user.roles == "Admin") {
 
-            const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
+            const ListOfLayers = await LayerTypeRepository.createQueryBuilder("layertype")
+                .orderBy("layertype.sequence_id", 'ASC')
                 .execute();
+
+            ListOfLayers.forEach(e => {
+                delete e.layertype_sequence_id;
+            });
             return res
                 .status(201)
                 .send(
@@ -84,28 +89,14 @@ exports.getLayerTypes = async (req, res) => {
 exports.updateLayer = async (req, res) => {
     try {
         const data = req.body;
-        let trueData = []
-        let falseData = []
-        data.map((e) => {
-            if (e.layertype_selected == true) {
-                trueData.push(e.layertype_id)
-            }
-            if (e.layertype_selected == false) {
-                falseData.push(e.layertype_id)
-            }
-        })
 
-        const trueDatas = await LayerTypeRepository.createQueryBuilder()
-            .update()
-            .set({ selected: true })
-            .where({ id: In(trueData) })
-            .execute();
-
-        const falseDatas = await LayerTypeRepository.createQueryBuilder()
-            .update()
-            .set({ selected: false })
-            .where({ id: In(falseData) })
-            .execute();
+        data.map(async (e, i) => {
+            await LayerTypeRepository.createQueryBuilder()
+                .update()
+                .set({ selected: e.layertype_selected, sequence_id: i })
+                .where({ id: e.layertype_id })
+                .execute();
+        });
 
         return res
             .status(201)

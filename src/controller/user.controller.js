@@ -96,11 +96,11 @@ exports.generateImage = async (req, res) => {
                         .filter((file) => fs.lstatSync(path.join(jsonFolderName, file)).isFile())
                         .map((file) => (file))
                     jsonData.forEach((e, i) => {
-                        const data2 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/json/user_${user.id}/` + e;
+                        const data2 = `${process.env.IP_ADDRESS}/build/json/user_${user.id}/` + e;
                         finalData.push(data2)
                     });
                     data.forEach((e, i) => {
-                        const data1 = `http://${process.env.IP_ADDRESS}:${process.env.PORT}/build/images/user_${user.id}/` + e;
+                        const data1 = `${process.env.IP_ADDRESS}/build/images/user_${user.id}/` + e;
                         finalData.push(data1)
                     })
                 }, "1000")

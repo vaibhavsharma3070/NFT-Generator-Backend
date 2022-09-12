@@ -15,6 +15,10 @@ module.exports = new EntitySchema({
         selected: {
             type: "boolean",
             default: true
-        }
+        },
+        sequence_id: {
+            type: "int",
+            default: 1
+        },
     }
 })

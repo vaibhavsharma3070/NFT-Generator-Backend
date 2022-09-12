@@ -328,7 +328,7 @@ const saveMetaDataSingleFile = (_editionCount, user) => {
     `${buildDir}/json/user_${user.id}/${_editionCount}.json`,
     JSON.stringify(metadata, null, 2)
   );
-  metadataList.length = 0;
+  // metadataList.length = 0;
 };
 
 function shuffle(array) {
