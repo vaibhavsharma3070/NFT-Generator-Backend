@@ -47,8 +47,9 @@ const layerConfigurations = async (user) => {
   configData.select(["config.growEditionSizeTo"]);
   const data = await configData.getOne();
 
-  const ListOfLayers = await LayerTypeRepository.createQueryBuilder()
+  const ListOfLayers = await LayerTypeRepository.createQueryBuilder("layertype")
     .where("selected = :s", { s: true })
+    .orderBy("layertype.sequence_id", 'ASC')
     .execute();
 
   let arrayOfLayers = []
