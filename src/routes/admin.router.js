@@ -12,6 +12,6 @@ adminRouter.get("/layertypelist", authMiddleware, getLayerTypes);
 adminRouter.put("/updatelayer", authMiddleware, updateLayer);
 adminRouter.delete("/deletelayer/:layertype_id", authMiddleware, deleteLayer);
 adminRouter.get("/userlist", authMiddleware, listOfUser);
-adminRouter.delete("/delete/:id", authMiddleware, deleteUser)
+adminRouter.put("/delete/:id", authMiddleware, deleteUser)
 
 module.exports = adminRouter;
