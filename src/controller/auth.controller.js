@@ -114,6 +114,7 @@ exports.listOfUser = async (req, res) => {
 
       const listOfUser = await AdminRepository.createQueryBuilder("user")
         .select(["user.id", "user.firstname", "user.lastname", "user.email", "user.roles", "user.is_active", "user.created_at"])
+        .orderBy("user.id", 'ASC')
         .execute();
 
 
