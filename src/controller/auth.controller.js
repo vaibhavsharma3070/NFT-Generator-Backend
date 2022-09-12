@@ -149,7 +149,7 @@ exports.deleteUser = async (req, res) => {
       .execute();
 
     return res.status(200).send(
-      CreateSuccessResponse(`User deactive successfully`)
+      CreateSuccessResponse(`User ${status} successfully`, status)
     );
   } catch (error) {
     // return an error
