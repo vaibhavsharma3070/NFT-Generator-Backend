@@ -439,6 +439,7 @@ const startCreating = async (user) => {
     layerConfigIndex++;
   }
   writeMetaData(JSON.stringify(metadataList, null, 2), user);
+  metadataList.length = 0;
 };
 
 module.exports = { startCreating, buildSetup, getElements };

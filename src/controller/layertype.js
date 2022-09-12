@@ -91,6 +91,7 @@ exports.updateLayer = async (req, res) => {
         const data = req.body;
 
         data.map(async (e, i) => {
+            console.log(e.layertype_selected);
             await LayerTypeRepository.createQueryBuilder()
                 .update()
                 .set({ selected: e.layertype_selected, sequence_id: i })
