@@ -141,9 +141,10 @@ exports.listOfUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   let { id } = req.params;
+  const status = req.body.status
   try {
     const DeleteAdmin = await AdminRepository.createQueryBuilder()
-      .update({ is_active: false })
+      .update({ is_active: status })
       .where("id = :id", { id: id })
       .execute();
 
