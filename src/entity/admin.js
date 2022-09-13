@@ -28,7 +28,7 @@ module.exports = new EntitySchema({
     },
     is_active: {
       type: "boolean",
-      default: false
+      default: true
     },
     created_at: {
       type: "varchar",
