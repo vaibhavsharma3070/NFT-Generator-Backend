@@ -346,7 +346,7 @@ function shuffle(array) {
 }
 
 const startCreating = async (user) => {
-  const layerConfigurationsData = await layerConfigurations(user);
+  const layerConfigurationsData = await layerConfigurations();
   let layerConfigIndex = 0;
   let editionCount = 1;
   let failedCount = 0;

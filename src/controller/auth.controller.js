@@ -141,9 +141,18 @@ exports.listOfUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
+  const token = res.locals.token;
+  const user = jwt.decode(token);
   let { id } = req.params;
   const status = req.body.status
   try {
+
+    if (user.id === id) {
+      return res.status(400).send(
+        CreateSuccessResponse(`You can not block your self.`)
+      );
+    }
+
     const DeleteAdmin = await AdminRepository.createQueryBuilder()
       .update({ is_active: status })
       .where("id = :id", { id: id })

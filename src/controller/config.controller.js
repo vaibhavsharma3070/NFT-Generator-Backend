@@ -3,7 +3,7 @@ const { CreateSuccessResponse, CreateErrorResponse, } = require("../helpers/resp
 const bcrypt = require('bcryptjs');
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const ConfigRepository = AppDataSource.getRepository("Config");
+const ConfigRepository = AppDataSource.getRepository("config");
 
 exports.getConfig = async (req, res) => {
     try {

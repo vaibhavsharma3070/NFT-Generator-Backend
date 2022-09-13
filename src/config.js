@@ -2,7 +2,6 @@ const basePath = process.cwd();
 const { AppDataSource } = require("../src/data-source")
 const { MODE } = require(`${basePath}/constants/blend_mode.js`);
 const { NETWORK } = require(`${basePath}/constants/network.js`);
-const ConfigRepository = AppDataSource.getRepository("Config");
 const network = NETWORK.eth;
 // General metadata for Ethereum
 const namePrefix = "Your Collection";
@@ -38,8 +37,10 @@ const solanaMetadata = {
 // ];
 
 
-const layerConfigurations = async (user) => {
+const layerConfigurations = async () => {
+try {
   const LayerTypeRepository = AppDataSource.getRepository("layertype");
+  const ConfigRepository = AppDataSource.getRepository("config");
   const configData = ConfigRepository.createQueryBuilder("config");
   configData.where({
     id: 1,
@@ -63,6 +64,9 @@ const layerConfigurations = async (user) => {
       layersOrder: arrayOfLayers,
     },
   ];
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 const shuffleLayerConfigurations = false;

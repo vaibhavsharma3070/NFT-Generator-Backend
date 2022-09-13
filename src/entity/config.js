@@ -1,7 +1,7 @@
 var EntitySchema = require("typeorm").EntitySchema
 
 module.exports = new EntitySchema({
-  name: "Config",
+  name: "config",
   tableName: "config",
   columns: {
     id: {
@@ -12,8 +12,8 @@ module.exports = new EntitySchema({
     growEditionSizeTo: {
       type: "int",
     },
-    user_id:{
-      type:"int"
+    user_id: {
+      type: "int"
     },
     created_at: {
       type: "varchar",
