@@ -150,7 +150,7 @@ exports.generateImage = async (req, res) => {
                             finalTraitsData.push(rarityData[layer][trait])
                         }
                     }
-                }, 1000)
+                }, "2000")
             }).then(() => {
                 fs.writeFileSync(
                     `${buildDir}/json/user_${user.id}/_traitjson.json`,
@@ -177,7 +177,7 @@ exports.generateImage = async (req, res) => {
                         const data1 = `${process.env.IP_ADDRESS}/build/images/user_${user.id}/` + e;
                         finalData.push(data1)
                     })
-                }, 1000)
+                }, "1000")
 
             }).then(() => {
                 setTimeout(() => {
@@ -188,7 +188,7 @@ exports.generateImage = async (req, res) => {
                                 `Generate successfully`, finalData
                             )
                         );
-                }, 1000)
+                }, "1000")
 
             }).then(() => {
                 setTimeout(() => {
@@ -208,7 +208,7 @@ exports.generateImage = async (req, res) => {
                     };
                     finalData.length = 0;
                     deleteExists(user)
-                }, 2000)
+                }, "5000")
 
             });
     } catch (error) {
