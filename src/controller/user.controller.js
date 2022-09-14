@@ -194,7 +194,7 @@ exports.generateImage = async (req, res) => {
                                 `Generate successfully`, finalData
                             )
                         );
-                }, "5000")
+                }, 5000)
 
             }).then(() => {
                 setTimeout(() => {
@@ -216,7 +216,7 @@ exports.generateImage = async (req, res) => {
                     finalData.length = 0;
                     finalTraitsData.length = 0;
                     deleteExists(user)
-                }, "10000")
+                }, 10000)
 
             });
     } catch (error) {
