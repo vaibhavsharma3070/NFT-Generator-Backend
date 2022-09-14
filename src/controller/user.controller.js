@@ -85,11 +85,13 @@ exports.generateImage = async (req, res) => {
         Promise.resolve()
             .then(async () => {
 
-                buildSetup(user);
-                startCreating(user);
-
+                const a = buildSetup(user);
+                const b = await startCreating(user);
+                console.log("buildSetup======================>", a);
+                console.log("startCreating======================>", b);
             }).then(async () => {
                 setTimeout(async () => {
+                    console.log("Get metadata------------------------------------------");
                     let rawdata = fs.readFileSync(`${basePath}/build/json/user_${user.id}/_metadata.json`);
                     let data = JSON.parse(rawdata);
                     let editionSize = data.length;
@@ -152,6 +154,7 @@ exports.generateImage = async (req, res) => {
                     }
 
                     setTimeout(() => {
+                        console.log("Write trait json------------------------------------------");
                         fs.writeFileSync(
                             `${buildDir}/json/user_${user.id}/_traitjson.json`,
                             JSON.stringify(finalTraitsData, null, 2)
@@ -161,6 +164,7 @@ exports.generateImage = async (req, res) => {
 
             }).then(() => {
                 setTimeout(() => {
+                    console.log("List image and json------------------------------------------");
                     const folderName = `${buildDir}/images/user_${user.id}`;
                     const jsonFolderName = `${buildDir}/json/user_${user.id}`;
                     const data = fs.readdirSync(folderName)
@@ -182,6 +186,7 @@ exports.generateImage = async (req, res) => {
 
             }).then(() => {
                 setTimeout(() => {
+                    console.log("Send response------------------------------------------");
                     return res
                         .status(201)
                         .send(
@@ -193,6 +198,7 @@ exports.generateImage = async (req, res) => {
 
             }).then(() => {
                 setTimeout(() => {
+                    console.log("Delete file------------------------------------------");
                     const deleteExists = (user) => {
                         const folderName = `${buildDir}/images/user_${user.id}`;
                         const jsonFolderName = `${buildDir}/json/user_${user.id}`;

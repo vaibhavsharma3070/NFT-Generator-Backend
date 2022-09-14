@@ -54,6 +54,7 @@ const buildSetup = (user) => {
   if (gif.export) {
     fs.mkdirSync(`${buildDir}/gifs`);
   }
+  return true
 };
 
 const getRarityWeight = (_str) => {
@@ -440,6 +441,7 @@ const startCreating = async (user) => {
   }
   writeMetaData(JSON.stringify(metadataList, null, 2), user);
   metadataList.length = 0;
+  return true
 };
 
 module.exports = { startCreating, buildSetup, getElements };
