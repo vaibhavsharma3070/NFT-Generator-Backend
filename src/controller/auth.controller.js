@@ -170,3 +170,53 @@ exports.deleteUser = async (req, res) => {
       );
   }
 }
+
+exports.ChangePassword = async (req, res) => {
+  const token = res.locals.token;
+  const user = jwt.decode(token);
+  try {
+    let userData = await AdminRepository.find({
+      where: { id: user.id },
+    });
+
+    const { old_password, new_password, confirm_password } = req.body;
+    if (new_password != confirm_password) {
+      return res
+        .status(500)
+        .send(
+          CreateSuccessResponse(
+            "New password and Confirm password is not matched!!!!."
+          )
+        );
+    }
+    let validUser = bcrypt.compareSync(old_password, userData[0].password);
+    if (!validUser) {
+      return res
+        .status(404)
+        .send(CreateSuccessResponse(`Old Password is wrong!!!`));
+    }
+    if (validUser) {
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPwd = bcrypt.hashSync(confirm_password, salt);
+      await AdminRepository.createQueryBuilder()
+        .update({
+          password: hashedPwd,
+        })
+        .where("id = :id", { id: user.id })
+        .execute();
+      return res
+        .status(201)
+        .send(CreateSuccessResponse(`Password change successfully`));
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "ChangePassword",
+          `${error}`,
+          "Something Went Wrong!!"
+        )
+      );
+  }
+};
