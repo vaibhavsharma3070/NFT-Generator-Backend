@@ -193,12 +193,12 @@ const addAttributes = (_element) => {
 
 const loadLayerImg = async (_layer) => {
   try {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       const image = await loadImage(`${_layer.selectedElement.path}`);
       resolve({ layer: _layer, loadedImage: image });
     });
   } catch (error) {
-    console.log("eroreoreroeroeroeroeroe",error);
+    console.log("eroreoreroeroeroeroeroe", error);
     console.error("Error loading image:", error);
   }
 };
