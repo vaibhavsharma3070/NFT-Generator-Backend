@@ -192,10 +192,11 @@ const addAttributes = (_element) => {
 };
 
 const loadLayerImg = async (_layer) => {
-  console.log("function layers====>",_layer);
+  console.log("function layers====>", _layer);
   try {
     return new Promise(async (resolve) => {
       const image = await loadImage(`${_layer.selectedElement.path}`);
+      console.log("---------image--------", image);
       resolve({ layer: _layer, loadedImage: image });
     });
   } catch (error) {
@@ -377,9 +378,9 @@ const startCreating = async (user) => {
       if (isDnaUnique(dnaList, newDna)) {
         let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
-          console.log("results~~~~~~~~~~>",results);
+        console.log("results~~~~~~~~~~>", results);
         results.forEach((layer) => {
-          console.log("layer========>",layer);
+          console.log("layer========>", layer);
           loadedElements.push(loadLayerImg(layer));
         });
 
