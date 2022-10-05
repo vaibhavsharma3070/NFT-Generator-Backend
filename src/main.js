@@ -377,7 +377,7 @@ const startCreating = async (user) => {
       if (isDnaUnique(dnaList, newDna)) {
         let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
-
+          console.log("results~~~~~~~~~~>",results);
         results.forEach((layer) => {
           console.log("layer========>",layer);
           loadedElements.push(loadLayerImg(layer));
