@@ -31,6 +31,7 @@ AppDataSource.initialize()
         app.use("/", mainRouter);
         app.use('/static', express.static(path.join(__dirname, 'Static Files')))
         app.use('/build', express.static(path.join(__dirname, 'build')))
+        app.use('/layer', express.static(path.join(__dirname, 'layers')))
         app.set('view engine', 'ejs');
 
         app.listen(PORT, (error) => {
