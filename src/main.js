@@ -198,6 +198,7 @@ const loadLayerImg = async (_layer) => {
       resolve({ layer: _layer, loadedImage: image });
     });
   } catch (error) {
+    console.log("eroreoreroeroeroeroeroe",error);
     console.error("Error loading image:", error);
   }
 };
